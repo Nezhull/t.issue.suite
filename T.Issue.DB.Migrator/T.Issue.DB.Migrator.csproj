@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{32AECBB1-EE69-457E-A6AA-FCC43BD5ED2B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>T.Issue.DB.Migrator</RootNamespace>
+    <AssemblyName>T.Issue.DB.Migrator</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DotLiquid, Version=1.8.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotLiquid.1.8.0\lib\NET40\DotLiquid.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Config\MigratorConfigurationBuilder.cs" />
+    <Compile Include="Config\MigratorConfigurationImpl.cs" />
+    <Compile Include="DatabaseMigratorBuilder.cs" />
+    <Compile Include="IDatabaseMigrator.cs" />
+    <Compile Include="IDbAccessFacade.cs" />
+    <Compile Include="IMigratorConfiguration.cs" />
+    <Compile Include="Impl\BinaryToHexFilter.cs" />
+    <Compile Include="Impl\BootstrapHandler.cs" />
+    <Compile Include="Impl\DatabaseMigratorImpl.cs" />
+    <Compile Include="Impl\DbAccessFacadeImpl.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\ScriptSplitter.cs" />
+    <Compile Include="Utils\ScriptTypeUtils.cs" />
+    <Compile Include="Utils\SeparatorLineReader.cs" />
+    <Compile Include="Utils\SqlScriptReader.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Impl\create.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\T.Issue.Bootstrapper\T.Issue.Bootstrapper.csproj">
+      <Project>{225b265d-6136-4da1-aac5-19b5cfefbdeb}</Project>
+      <Name>T.Issue.Bootstrapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\T.Issue.Commons\T.Issue.Commons.csproj">
+      <Project>{ad68189e-1e1e-4f02-8652-307b0db04f77}</Project>
+      <Name>T.Issue.Commons</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
