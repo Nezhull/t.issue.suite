@@ -12,6 +12,7 @@
     <copyright>$copyright$</copyright>
     <tags>Commons PersonalCode DateTime Hash MD5 SHA1</tags>
     <dependencies>
+	  <dependency id="JetBrains.Annotations" version="10.2.1" />
     </dependencies>
   </metadata>
 </package>

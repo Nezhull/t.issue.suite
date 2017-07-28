@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using JetBrains.Annotations;
 using Generic = System.Collections.Generic;
 
 namespace T.Issue.Commons.Utils
@@ -9,6 +10,7 @@ namespace T.Issue.Commons.Utils
     /// </summary>
     public static class Assert
     {
+        [ContractAnnotation("obj:null => halt")]
         public static void NotNull(object obj, string message = "Object is null!")
         {
             if (obj == null)
@@ -25,6 +27,24 @@ namespace T.Issue.Commons.Utils
             }
         }
 
+        [ContractAnnotation("expression:null => halt")]
+        public static void IsTrue(bool? expression, string message = "Expression is null or false!")
+        {
+            if (!expression.HasValue || !expression.Value)
+            {
+                throw new AssertionException(AssertionType.IsTrue, message);
+            }
+        }
+
+        public static void IsTrueSafe(bool? expression, string message = "Expression is false!")
+        {
+            if (expression.HasValue && !expression.Value)
+            {
+                throw new AssertionException(AssertionType.IsTrue, message);
+            }
+        }
+
+        [ContractAnnotation("str:null => halt")]
         public static void HasText(string str, string message = "String is empty!")
         {
             if (string.IsNullOrWhiteSpace(str))
@@ -33,6 +53,7 @@ namespace T.Issue.Commons.Utils
             }
         }
 
+        [ContractAnnotation("str:null => halt")]
         public static void IsNotEmpty(string str, string message = "String is empty!")
         {
             if (string.IsNullOrEmpty(str))
@@ -41,6 +62,7 @@ namespace T.Issue.Commons.Utils
             }
         }
 
+        [ContractAnnotation("str:null => halt")]
         public static void IsNotWhiteSpace(string str, string message = "String is empty!")
         {
             if (str == null || (string.Empty != str && string.Empty == str.Trim()))
@@ -49,6 +71,7 @@ namespace T.Issue.Commons.Utils
             }
         }
 
+        [ContractAnnotation("array:null => halt")]
         public static void IsNotEmpty<T>(T[] array, string message = "Array is empty!")
         {
             if (array == null || array.Length == 0)
@@ -57,6 +80,7 @@ namespace T.Issue.Commons.Utils
             }
         }
 
+        [ContractAnnotation("collection:null => halt")]
         public static void IsNotEmpty(ICollection collection, string message = "Collection is empty!")
         {
             if (collection == null || collection.Count == 0)
@@ -65,6 +89,7 @@ namespace T.Issue.Commons.Utils
             }
         }
 
+        [ContractAnnotation("collection:null => halt")]
         public static void IsNotEmpty<T>(Generic.ICollection<T> collection, string message = "Collection is empty!")
         {
             if (collection == null || collection.Count == 0)
