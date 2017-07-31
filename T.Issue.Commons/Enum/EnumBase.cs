@@ -1,95 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace T.Issue.Commons.Enum
 {
-    public abstract class EnumBase<T> : IEquatable<EnumBase<T>> where T : EnumBase<T>
+    /// <summary>
+    /// Base class for simulating Java style enums.
+    /// </summary>
+    /// <typeparam name="T">Actual enum type.</typeparam>
+    public abstract class EnumBase<T> where T : EnumBase<T>
     {
-        protected static List<T> EnumValues = new List<T>();
+        protected static List<T> InnerValues = new List<T>();
 
-        public virtual int Key { get; }
-        public virtual string Value { get; }
+        public static ReadOnlyCollection<T> Values { get; } = InnerValues.AsReadOnly();
 
-        protected EnumBase(int key, string value)
+        public virtual int Value { get; }
+
+        protected EnumBase(int value)
         {
-            Key = key;
             Value = value;
-            EnumValues.Add((T) this);
+            InnerValues.Add((T) this);
         }
 
-        protected static ReadOnlyCollection<T> GetBaseValues()
+        protected static T Resolve(int? value)
         {
-            return EnumValues.AsReadOnly();
+            return Values.SingleOrDefault(v => v.Value == value);
         }
 
-        protected static T GetBaseByKey(int key)
+        public static implicit operator int (EnumBase<T> enm)
         {
-            foreach (T value in EnumValues)
-            {
-                if (value.Key == key) return value;
-            }
-            return null;
+            return enm.Value;
         }
 
-        public bool Equals(EnumBase<T> other)
+        public static implicit operator EnumBase<T>(int value)
         {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-            return Key == other.Key;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            if (obj.GetType() != GetType())
-            {
-                return false;
-            }
-            return Equals((EnumBase<T>) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return Key;
-        }
-
-        public override string ToString()
-        {
-            return Value;
-        }
-
-        public static implicit operator int(EnumBase<T> enm)
-        {
-            return enm.Key;
-        }
-
-        public static implicit operator EnumBase<T>(int key)
-        {
-            return GetBaseByKey(key);
+            return Resolve(value);
         }
 
         public static implicit operator int?(EnumBase<T> enm)
         {
-            return enm.Key;
+            return enm.Value;
         }
 
-        public static implicit operator EnumBase<T>(int? key)
+        public static implicit operator EnumBase<T>(int? value)
         {
-            return key.HasValue ? GetBaseByKey(key.Value) : null;
+            return Resolve(value);
         }
     }
 }
