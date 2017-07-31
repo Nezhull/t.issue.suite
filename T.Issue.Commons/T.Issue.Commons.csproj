@@ -44,6 +44,7 @@
     <Compile Include="AppFeatures\IAppFeatureService.cs" />
     <Compile Include="Check\Check.cs" />
     <Compile Include="Check\ICheck.cs" />
+    <Compile Include="Enum\EnumBase.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
