@@ -24,12 +24,13 @@ namespace T.Issue.Commons.Extensions
         /// </summary>
         /// <param name="str">String to truncate.</param>
         /// <param name="length">Maximum string length.</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <returns>Original string or a truncated one if the original was too long.</returns>
         public static string Truncate(this string str, int length)
         {
             if (length < 0)
             {
-                throw new ArgumentOutOfRangeException("length", "Length must be >= 0");
+                throw new ArgumentOutOfRangeException(nameof(length), "Length must be >= 0");
             }
 
             if (str == null)

@@ -10,7 +10,7 @@ namespace T.Issue.Commons.Utils.Tests
         public void TestEnumBaseEquals()
         {
             int? a = EnumTestType.A;
-            int b = EnumTestType.B;
+            int b = EnumTestType.B.Value;
 
             EnumTestType ae = (EnumTestType) a;
             EnumTestType be = (EnumTestType) b;
@@ -26,7 +26,7 @@ namespace T.Issue.Commons.Utils.Tests
         public void TestLabeledEquals()
         {
             int? a = EnumTestType2.A;
-            int b = EnumTestType2.B;
+            int b = EnumTestType2.B.Value;
 
             EnumTestType2 ae = (EnumTestType2) a;
             EnumTestType2 be = (EnumTestType2) b;

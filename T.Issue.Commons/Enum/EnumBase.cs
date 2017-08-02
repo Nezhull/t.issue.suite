@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -27,11 +28,6 @@ namespace T.Issue.Commons.Enum
             return Values.SingleOrDefault(v => v.Value == value);
         }
 
-        public static implicit operator int (EnumBase<T> enm)
-        {
-            return enm.Value;
-        }
-
         public static implicit operator EnumBase<T>(int value)
         {
             return Resolve(value);
@@ -39,7 +35,7 @@ namespace T.Issue.Commons.Enum
 
         public static implicit operator int?(EnumBase<T> enm)
         {
-            return enm.Value;
+            return enm?.Value;
         }
 
         public static implicit operator EnumBase<T>(int? value)
