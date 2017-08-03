@@ -10,6 +10,7 @@
     <description>$description$</description>
     <releaseNotes></releaseNotes>
     <copyright>$copyright$</copyright>
+    <projectUrl>https://github.com/Nezhull/t.issue.suite/</projectUrl>
     <tags>Bootstrap</tags>
 	<dependencies>
       <dependency id="T.Issue.Commons" version="1.0.3.0" />

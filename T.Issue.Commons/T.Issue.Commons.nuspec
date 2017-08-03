@@ -10,6 +10,7 @@
     <description>$description$</description>
     <releaseNotes></releaseNotes>
     <copyright>$copyright$</copyright>
+    <projectUrl>https://github.com/Nezhull/t.issue.suite/</projectUrl>
     <tags>Commons PersonalCode DateTime Hash MD5 SHA1</tags>
     <dependencies>
 	  <dependency id="JetBrains.Annotations" version="11.0.0" />

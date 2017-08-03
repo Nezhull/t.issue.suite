@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace T.Issue.Commons.Enum
 {
@@ -21,6 +22,12 @@ namespace T.Issue.Commons.Enum
         {
             Value = value;
             InnerValues.Add((T) this);
+        }
+
+        public static void Init()
+        {
+            Type type = typeof(T);
+            RuntimeHelpers.RunClassConstructor(type.TypeHandle);
         }
 
         protected static T Resolve(int? value)
