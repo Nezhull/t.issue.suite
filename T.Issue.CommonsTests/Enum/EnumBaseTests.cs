@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using T.Issue.Commons.Enum;
 
 namespace T.Issue.Commons.Utils.Tests
@@ -11,12 +12,15 @@ namespace T.Issue.Commons.Utils.Tests
         {
             int? a = EnumTestType.A;
             int b = EnumTestType.B.Value;
+            Int32 c = EnumTestType.C.Value;
 
             EnumTestType ae = (EnumTestType) a;
             EnumTestType be = (EnumTestType) b;
+            EnumTestType bc = (EnumTestType) c;
 
             Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(EnumTestType.A == ae);
             Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(EnumTestType.B == be);
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(EnumTestType.C == bc);
 
             Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsFalse(EnumTestType.A == 1);
             Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsFalse(1 == EnumTestType.A);

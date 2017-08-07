@@ -30,7 +30,7 @@ namespace T.Issue.Commons.Enum
             RuntimeHelpers.RunClassConstructor(type.TypeHandle);
         }
 
-        protected static T Resolve(int? value)
+        public static T Resolve(int? value)
         {
             return Values.SingleOrDefault(v => v.Value == value);
         }
