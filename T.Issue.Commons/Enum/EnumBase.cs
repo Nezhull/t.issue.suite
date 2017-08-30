@@ -14,7 +14,17 @@ namespace T.Issue.Commons.Enum
     {
         protected static List<T> InnerValues = new List<T>();
 
-        public static ReadOnlyCollection<T> Values { get; } = InnerValues.AsReadOnly();
+        private static readonly ReadOnlyCollection<T> values = InnerValues.AsReadOnly();
+        private static readonly Type enumType = typeof(T);
+
+        public static ReadOnlyCollection<T> Values
+        {
+            get
+            {
+                Init();
+                return values;
+            }
+        }
 
         public virtual int Value { get; }
 
@@ -22,12 +32,6 @@ namespace T.Issue.Commons.Enum
         {
             Value = value;
             InnerValues.Add((T) this);
-        }
-
-        public static void Init()
-        {
-            Type type = typeof(T);
-            RuntimeHelpers.RunClassConstructor(type.TypeHandle);
         }
 
         public static T Resolve(int? value)
@@ -48,6 +52,11 @@ namespace T.Issue.Commons.Enum
         public static implicit operator EnumBase<T>(int? value)
         {
             return Resolve(value);
+        }
+
+        private static void Init()
+        {
+            RuntimeHelpers.RunClassConstructor(enumType.TypeHandle);
         }
     }
 }
