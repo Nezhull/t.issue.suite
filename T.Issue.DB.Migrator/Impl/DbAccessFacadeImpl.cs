@@ -14,7 +14,7 @@ namespace T.Issue.DB.Migrator.Impl
 {
     internal class DbAccessFacadeImpl : IDbAccessFacade
     {
-        private static readonly ILog LOG = LogManager.GetLogger(typeof(DbAccessFacadeImpl));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(DbAccessFacadeImpl));
 
         // TODO Use DotLiquid templates
         private const string ParameterPrefix = "${";
@@ -33,10 +33,10 @@ namespace T.Issue.DB.Migrator.Impl
             {
                 if (SchemaTableExists(connection, tx, configuration))
                 {
-                    LOG.Debug("Schema table exists.");
+                    Log.Debug("Schema table exists.");
                     return;
                 }
-                LOG.Debug("Schema table is not found, creating it now...");
+                Log.Debug("Schema table is not found, creating it now...");
 
                 using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(GetType(), "create.sql"))
                 {
@@ -51,12 +51,12 @@ namespace T.Issue.DB.Migrator.Impl
                 }
                 tx.Commit();
             }
-            LOG.Debug("Schema table created.");
+            Log.Debug("Schema table created.");
         }
 
         public IList<AppliedItem> GetAppliedScripts(SqlConnection connection, IMigratorConfiguration configuration)
         {
-            var result = new List<AppliedItem>();
+            List<AppliedItem> result = new List<AppliedItem>();
             using (var command = new SqlCommand(string.Format(SelectFromSchemaVersionSql, configuration.SchemaVersionTable), connection))
             {
                 using (var reader = command.ExecuteReader())
@@ -70,7 +70,7 @@ namespace T.Issue.DB.Migrator.Impl
             return result;
         }
 
-        public void ApplyPendingScripts(SqlConnection connection, IMigratorConfiguration configuration, IEnumerable<ClasspathItem> scripts)
+        public void ApplyPendingScripts(SqlConnection connection, IMigratorConfiguration configuration, IEnumerable<PendingItem> scripts)
         {
             foreach (var script in scripts)
             {
@@ -82,14 +82,14 @@ namespace T.Issue.DB.Migrator.Impl
             }
         }
 
-        private void RunScript(SqlConnection connection, SqlTransaction tx, IMigratorConfiguration configuration, ClasspathItem script)
+        private void RunScript(SqlConnection connection, SqlTransaction tx, IMigratorConfiguration configuration, PendingItem script)
         {
-            LOG.DebugFormat(script.Type == ItemType.Versioned ? "Applying script {0}" : "Reapplying script {0}", script.Name);
+            Log.DebugFormat(script.Type == ItemType.Versioned ? "Applying script {0}" : "Reapplying script {0}", script.Name);
 
             AppliedItem appliedScript = GetAppliedScript(connection, tx, configuration, script);
             if (appliedScript != null && appliedScript.Type == ItemType.Versioned)
             {
-                LOG.Debug("Script already applied, skipping.");
+                Log.Debug("Script already applied, skipping.");
                 return;
             }
 
@@ -105,7 +105,7 @@ namespace T.Issue.DB.Migrator.Impl
                 }
                 catch (SqlException)
                 {
-                    LOG.Error("Error while running script:\n" + scriptItem);
+                    Log.Error("Error while running script:\n" + scriptItem);
                     throw;
                 }
             }
@@ -120,7 +120,7 @@ namespace T.Issue.DB.Migrator.Impl
             }
         }
 
-        private void InsertIntoSchemaVersion(SqlConnection connection, SqlTransaction tx, IMigratorConfiguration configuration, ClasspathItem script)
+        private void InsertIntoSchemaVersion(SqlConnection connection, SqlTransaction tx, IMigratorConfiguration configuration, PendingItem script)
         {
             var insertSql = string.Format(InsertIntoSchemaVersionSql, configuration.SchemaVersionTable);
 
@@ -135,7 +135,7 @@ namespace T.Issue.DB.Migrator.Impl
             }
         }
 
-        private void UpdateSchemaVersion(SqlConnection connection, SqlTransaction tx, IMigratorConfiguration configuration, ClasspathItem script)
+        private void UpdateSchemaVersion(SqlConnection connection, SqlTransaction tx, IMigratorConfiguration configuration, PendingItem script)
         {
             var updateSql = string.Format(UpdateSchemaVersionHashSql, configuration.SchemaVersionTable);
 
@@ -159,7 +159,7 @@ namespace T.Issue.DB.Migrator.Impl
             }
         }
 
-        public AppliedItem GetAppliedScript(SqlConnection connection, SqlTransaction tx, IMigratorConfiguration configuration, ClasspathItem script)
+        public AppliedItem GetAppliedScript(SqlConnection connection, SqlTransaction tx, IMigratorConfiguration configuration, PendingItem script)
         {
             AppliedItem result = null;
 

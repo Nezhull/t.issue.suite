@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <LangVersion>7</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,15 +36,18 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collectors\ClasspathItemCollectorBase.cs" />
+    <Compile Include="Collectors\IBootstrapItemCollector.cs" />
     <Compile Include="IBootstrapHandler.cs" />
-    <Compile Include="BootstrapperBuilder.cs" />
     <Compile Include="IBootstrapper.cs" />
     <Compile Include="Impl\BootstrapperImpl.cs" />
     <Compile Include="Model\AppliedItem.cs" />
-    <Compile Include="Model\ClasspathItem.cs" />
+    <Compile Include="Model\BootstrapItem.cs" />
+    <Compile Include="Model\PendingItem.cs" />
     <Compile Include="Model\ErrorType.cs" />
     <Compile Include="Model\ItemLocation.cs" />
     <Compile Include="Model\ItemType.cs" />
+    <Compile Include="Model\ValidationContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

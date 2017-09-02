@@ -1,115 +1,98 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using T.Issue.Bootstrapper.Collectors;
 using T.Issue.Bootstrapper.Model;
 using T.Issue.Commons.Utils;
 
 namespace T.Issue.Bootstrapper.Impl
 {
-    internal class BootstrapperImpl<TApplied, TClasspath> : IBootstrapper<TApplied, TClasspath> where TApplied : AppliedItem where TClasspath : ClasspathItem
+    public class BootstrapperImpl<TApplied, TPending> : IBootstrapper<TApplied, TPending> where TApplied : AppliedItem where TPending : PendingItem
     {
-        public bool Bootstrap(IBootstrapHandler<TApplied, TClasspath> handler)
+        private readonly IBootstrapHandler<TPending> handler;
+        private readonly IBootstrapItemCollector<TPending> pendingCollector;
+        private readonly IBootstrapItemCollector<TApplied> appliedCollector;
+
+        public bool HaltOnValidationError { get; set; }
+        
+        public Action<ValidationContext<TApplied, TPending>> OnValidationError { protected get; set; }
+        public Action<IList<TPending>, IList<TApplied>> OnItemsCollected { protected get; set; }
+        public Func<TApplied, TPending, bool> OnAddItemToApply { protected get; set; }
+
+        public BootstrapperImpl(IBootstrapHandler<TPending> handler, IBootstrapItemCollector<TPending> pendingCollector, IBootstrapItemCollector<TApplied> appliedCollector)
         {
             Assert.NotNull(handler);
+            Assert.NotNull(pendingCollector);
+            Assert.NotNull(appliedCollector);
+            
+            this.handler = handler;
+            this.pendingCollector = pendingCollector;
+            this.appliedCollector = appliedCollector;
+        }
 
-            IList<TApplied> appliedItems = handler.GetAppliedItems();
-            IList<TClasspath> classpathItems = CollectClasspathItems(handler);
+        public virtual bool Bootstrap()
+        {
+            IList<TPending> pendingItems = pendingCollector.Collect();
+            IList<TApplied> appliedItems = appliedCollector.Collect();
 
-            handler.PreprocessItems(appliedItems, classpathItems);
+            OnItemsCollected?.Invoke(pendingItems, appliedItems);
 
-            if (!ValidateAppliedItems(appliedItems, classpathItems, handler))
+            if (!Validate(appliedItems, pendingItems))
             {
-                if (!handler.OnValidationErrors())
+                if (HaltOnValidationError)
                 {
                     return false;
                 }
             }
 
-            var pendingItems = GetPendingItems(appliedItems, classpathItems, handler);
+            IOrderedEnumerable<TPending> toApply = CollectToApply(appliedItems, pendingItems);
 
-            if (pendingItems.Any())
+            if (toApply.Any())
             {
-                handler.BootstrapPendingItems(pendingItems);
+                handler.Bootstrap(toApply);
             }
 
             return true;
         }
 
-        private IList<TClasspath> CollectClasspathItems(IBootstrapHandler<TApplied, TClasspath> handler)
+        private IOrderedEnumerable<TPending> CollectToApply(IList<TApplied> appliedItems, IList<TPending> pendingItems)
         {
-            List<TClasspath> result = new List<TClasspath>();
+            IList<TPending> itemsToRun = new List<TPending>();
 
-            foreach (var location in handler.GetItemLocations())
+            foreach (var pendingItem in pendingItems)
             {
-                result.AddRange(CollectClasspathItems(location, handler));
-            }
+                TApplied appliedItem = appliedItems.FirstOrDefault(s => Equals(pendingItem.Id, s.Id) && Equals(pendingItem.Version, s.Version));
 
-            return result;
-        }
-
-        private IList<TClasspath> CollectClasspathItems(ItemLocation location, IBootstrapHandler<TApplied, TClasspath> handler)
-        {
-            var result = new List<TClasspath>();
-            var prefix = location.Assembly.GetName().Name + "." + location.Location + ".";
-
-            foreach (var resource in location.Assembly.GetManifestResourceNames())
-            {
-                if (!resource.StartsWith(prefix))
+                if (appliedItem != null && (appliedItem.Type != ItemType.Repeatable || Equals(appliedItem.Checksum, pendingItem.Checksum)))
                 {
                     continue;
                 }
-
-                string itemName = resource.Substring(prefix.Length);
-
-                using (var stream = location.Assembly.GetManifestResourceStream(resource))
+                
+                if (OnAddItemToApply?.Invoke(appliedItem, pendingItem) ?? true)
                 {
-                    Assert.NotNull(stream);
-
-                    TClasspath item = handler.BuildClasspathItem(location, itemName, stream);
-
-                    if (item != null)
-                    {
-                        result.Add(item);
-                    }
-                }
-            }
-
-            return result;
-        }
-
-        private IOrderedEnumerable<TClasspath> GetPendingItems(IList<TApplied> appliedItems, IList<TClasspath> classpathItems, IBootstrapHandler<TApplied, TClasspath> handler)
-        {
-            IList<TClasspath> itemsToRun = new List<TClasspath>();
-
-            foreach (var classpathItem in classpathItems)
-            {
-                TApplied appliedItem = appliedItems.FirstOrDefault(s => Equals(classpathItem.Id, s.Id) && Equals(classpathItem.Version, s.Version));
-
-                if ((appliedItem == null || (appliedItem.Type == ItemType.Repeatable && !Equals(appliedItem.Checksum, classpathItem.Checksum)))
-                    && handler.IsItemPending(appliedItem, classpathItem))
-                {
-                    itemsToRun.Add(classpathItem);
+                    itemsToRun.Add(pendingItem);
                 }
             }
 
             return itemsToRun.OrderBy(s => s.Version);
         } 
 
-        private bool ValidateAppliedItems(IList<TApplied> appliedItems, IList<TClasspath> classpathItems, IBootstrapHandler<TApplied, TClasspath> handler)
+        protected virtual bool Validate(IList<TApplied> appliedItems, IList<TPending> pendingItems)
         {
             bool foundErrors = false;
 
             foreach (var appliedItem in appliedItems)
             {
-                TClasspath classpathItem = classpathItems.FirstOrDefault(s => Equals(appliedItem.Version, s.Version));
-                if (classpathItem == null)
+                TPending pendingItem = pendingItems.FirstOrDefault(s => Equals(appliedItem.Version, s.Version));
+                if (pendingItem == null)
                 {
                     foundErrors = true;
-                    handler.OnValidationError(ErrorType.MissingAppliedClasspathItem, appliedItem, null);
+                    OnValidationError?.Invoke(new ValidationContext<TApplied, TPending>(ErrorType.MissingAppliedClasspathItem, null, appliedItem));
                 }
-                else if (appliedItem.Type == ItemType.Versioned && !Equals(appliedItem.Checksum, classpathItem.Checksum))
+                else if (appliedItem.Type == ItemType.Versioned && !Equals(appliedItem.Checksum, pendingItem.Checksum))
                 {
                     foundErrors = true;
-                    handler.OnValidationError(ErrorType.AppliedAndClasspathItemChecksumMismatch, appliedItem, classpathItem);
+                    OnValidationError?.Invoke(new ValidationContext<TApplied, TPending>(ErrorType.AppliedAndClasspathItemChecksumMismatch, pendingItem, appliedItem));
                 }
             }
 

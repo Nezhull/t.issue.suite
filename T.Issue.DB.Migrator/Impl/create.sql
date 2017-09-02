@@ -1,4 +1,5 @@
-﻿
+﻿-- noinspection SqlNoDataSourceInspectionForFile
+
 CREATE TABLE [${schema.version.table}] (
 	[Type] [char](1) NOT NULL,
 	[Version] [nvarchar](255) NOT NULL,

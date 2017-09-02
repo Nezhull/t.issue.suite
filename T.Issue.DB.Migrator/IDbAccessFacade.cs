@@ -10,6 +10,6 @@ namespace T.Issue.DB.Migrator
 
         IList<AppliedItem> GetAppliedScripts(SqlConnection connection, IMigratorConfiguration configuration);
 
-        void ApplyPendingScripts(SqlConnection connection, IMigratorConfiguration configuration, IEnumerable<ClasspathItem> scripts);
+        void ApplyPendingScripts(SqlConnection connection, IMigratorConfiguration configuration, IEnumerable<PendingItem> scripts);
     }
 }
