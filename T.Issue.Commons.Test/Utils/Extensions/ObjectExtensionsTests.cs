@@ -1,49 +1,48 @@
 ﻿using T.Issue.Commons.Extensions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
-namespace T.Issue.Commons.Tests.Utils.Extensions
+namespace T.Issue.Commons.Test.Utils.Extensions
 {
-    [TestClass]
     public class ObjectExtensionsTests
     {
-        [TestMethod]
+        [Fact]
         public void NotNull_returns_true_when_object_is_not_null()
         {
             var o = new object();
             var s = "string";
 
-            Assert.IsTrue(o.NotNull(), "object failed");
-            Assert.IsTrue(s.NotNull(), "string failed");
+            Assert.True(o.NotNull(), "object failed");
+            Assert.True(s.NotNull(), "string failed");
         }
 
-        [TestMethod]
+        [Fact]
         public void NotNull_returns_false_when_object_is_null()
         {
             object o = null;
             string s = null;
 
-            Assert.IsFalse(o.NotNull(), "null object failed");
-            Assert.IsFalse(s.NotNull(), "null string failed");
+            Assert.False(o.NotNull(), "null object failed");
+            Assert.False(s.NotNull(), "null string failed");
         }
 
-        [TestMethod]
+        [Fact]
         public void Null_returns_false_when_object_is_not_null()
         {
             var o = new object();
             var s = "string";
 
-            Assert.IsFalse(o.Null(), "object failed");
-            Assert.IsFalse(s.Null(), "string failed");
+            Assert.False(o.Null(), "object failed");
+            Assert.False(s.Null(), "string failed");
         }
 
-        [TestMethod]
+        [Fact]
         public void Null_returns_true_when_object_is_null()
         {
             object o = null;
             string s = null;
 
-            Assert.IsTrue(o.Null(), "null object failed");
-            Assert.IsTrue(s.Null(), "null string failed");
+            Assert.True(o.Null(), "null object failed");
+            Assert.True(s.Null(), "null string failed");
         }
     }
 }

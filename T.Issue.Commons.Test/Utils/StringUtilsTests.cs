@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using T.Issue.Commons.Utils;
+using Xunit;
+using Assert = Xunit.Assert;
 
-namespace T.Issue.Commons.Utils.Tests
+namespace T.Issue.Commons.Test.Utils
 {
-    [TestClass]
     public class StringUtilsTests
     {
-        [TestMethod]
+        [Fact]
         public void TestHexConversion1()
         {
             string str = "This is test!";
@@ -21,10 +22,10 @@ namespace T.Issue.Commons.Utils.Tests
 
             string strFromHex = Encoding.UTF8.GetString(fromHex);
             
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(str, strFromHex);
+            Assert.Equal(str, strFromHex);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestHexConversion2()
         {
             byte[] bytes = Guid.NewGuid().ToByteArray();
@@ -33,7 +34,7 @@ namespace T.Issue.Commons.Utils.Tests
 
             byte[] fromHex = StringUtils.HexToByteArray(hex);
             
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(bytes.SequenceEqual(fromHex));
+            Assert.True(bytes.SequenceEqual(fromHex));
         }
     }
 }

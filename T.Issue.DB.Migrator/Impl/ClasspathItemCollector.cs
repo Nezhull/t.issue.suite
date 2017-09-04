@@ -2,9 +2,8 @@
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using Common.Logging;
 using DotLiquid;
-using DotLiquid.NamingConventions;
-using log4net;
 using T.Issue.Bootstrapper.Collectors;
 using T.Issue.Bootstrapper.Model;
 using T.Issue.Commons.Utils;

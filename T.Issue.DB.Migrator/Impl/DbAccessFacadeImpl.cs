@@ -5,9 +5,9 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Common.Logging;
 using T.Issue.Bootstrapper.Model;
 using T.Issue.Commons.Utils;
-using log4net;
 using T.Issue.DB.Migrator.Utils;
 
 namespace T.Issue.DB.Migrator.Impl

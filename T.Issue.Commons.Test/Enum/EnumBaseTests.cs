@@ -1,13 +1,12 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using T.Issue.Commons.Enum;
+using Xunit;
 
-namespace T.Issue.Commons.Utils.Tests
+namespace T.Issue.Commons.Test.Enum
 {
-    [TestClass]
     public class EnumBaseTests
     {
-        [TestMethod]
+        [Fact]
         public void TestEnumBaseEquals()
         {
             int? a = EnumTestType.A;
@@ -18,15 +17,15 @@ namespace T.Issue.Commons.Utils.Tests
             EnumTestType be = (EnumTestType) b;
             EnumTestType bc = (EnumTestType) c;
 
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(EnumTestType.A == ae);
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(EnumTestType.B == be);
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(EnumTestType.C == bc);
+            Assert.True(EnumTestType.A == ae);
+            Assert.True(EnumTestType.B == be);
+            Assert.True(EnumTestType.C == bc);
 
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsFalse(EnumTestType.A == 1);
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsFalse(1 == EnumTestType.A);
+            Assert.False(EnumTestType.A == 1);
+            Assert.False(1 == EnumTestType.A);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestLabeledEquals()
         {
             int? a = EnumTestType2.A;
@@ -35,20 +34,20 @@ namespace T.Issue.Commons.Utils.Tests
             EnumTestType2 ae = (EnumTestType2) a;
             EnumTestType2 be = (EnumTestType2) b;
 
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(EnumTestType2.A == ae);
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(EnumTestType2.B == be);
+            Assert.True(EnumTestType2.A == ae);
+            Assert.True(EnumTestType2.B == be);
 
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsFalse(EnumTestType2.A == 1);
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsFalse(1 == EnumTestType2.A);
+            Assert.False(EnumTestType2.A == 1);
+            Assert.False(1 == EnumTestType2.A);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestEnumBaseValues()
         {
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(EnumTestType.Values.Contains(EnumTestType.A));
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(EnumTestType.Values.Contains(EnumTestType.B));
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(EnumTestType.Values.Contains(EnumTestType.C));
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(EnumTestType.Values.Contains(EnumTestType.D));
+            Assert.True(EnumTestType.Values.Contains(EnumTestType.A));
+            Assert.True(EnumTestType.Values.Contains(EnumTestType.B));
+            Assert.True(EnumTestType.Values.Contains(EnumTestType.C));
+            Assert.True(EnumTestType.Values.Contains(EnumTestType.D));
         }
     }
 

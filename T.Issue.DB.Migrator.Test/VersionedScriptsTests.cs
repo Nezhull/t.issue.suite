@@ -1,35 +1,30 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
+using Common.Logging;
 using T.Issue.Bootstrapper.Model;
-using T.Issue.DB.MigratorTests;
-using log4net.Config;
 using T.Issue.DB.Migrator.Config;
+using T.Issue.DB.Migrator.Test.Logging;
+using Xunit;
+using Xunit.Abstractions;
 
-namespace T.Issue.DB.Migrator
+namespace T.Issue.DB.Migrator.Test
 {
-    [TestClass]
     public class VersionedScriptsTests
     {
-        private IMigratorConfiguration config;
+        private readonly IMigratorConfiguration config;
 
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext testContext)
+        public VersionedScriptsTests(ITestOutputHelper output)
         {
-            XmlConfigurator.Configure();
-        }
+            LogManager.Adapter = new XunitLoggerFactoryAdapter(LogLevel.Debug, output);
 
-        [TestInitialize]
-        public void Initialize()
-        {
             config = MigratorConfigurationBuilder.Build(Assembly.GetExecutingAssembly(), "TestScripts")
                 .AddScriptsLocation(Assembly.GetExecutingAssembly(), "TestScripts1")
                 .SetHaltOnValidationError(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void SetupDbMigrationTest()
         {
             DbAccessFacadeMock dbAccessFacade = new DbAccessFacadeMock();
@@ -38,10 +33,10 @@ namespace T.Issue.DB.Migrator
 
             migrator.Migrate(new SqlConnection());
 
-            Assert.IsTrue(dbAccessFacade.AppliedItems.Count == 5);
+            Assert.True(dbAccessFacade.AppliedItems.Count == 5);
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateSchemaTest()
         {
             DbAccessFacadeMock dbAccessFacade = new DbAccessFacadeMock();
@@ -59,11 +54,11 @@ namespace T.Issue.DB.Migrator
 
             migrator.Migrate(new SqlConnection());
 
-            Assert.IsTrue(dbAccessFacade.DbItems.Count == 5);
-            Assert.IsTrue(dbAccessFacade.AppliedItems.Count == 4);
+            Assert.True(dbAccessFacade.DbItems.Count == 5);
+            Assert.True(dbAccessFacade.AppliedItems.Count == 4);
         }
 
-        [TestMethod]
+        [Fact]
         public void ParametersTest()
         {
             DbAccessFacadeMock dbAccessFacade = new DbAccessFacadeMock();
@@ -75,16 +70,16 @@ namespace T.Issue.DB.Migrator
 
             migrator.Migrate(new SqlConnection());
 
-            ClasspathItem script = dbAccessFacade.ClasspathScripts.First(s => s.Version.Equals("201606201610"));
-            Assert.IsNotNull(script);
+            PendingItem script = dbAccessFacade.ClasspathScripts.First(s => s.Version.Equals("201606201610"));
+            Assert.NotNull(script);
 
-            Assert.IsTrue(script.Content.ToString().Contains("[col1]"));
-            Assert.IsTrue(script.Content.ToString().Contains("[col2]"));
-            Assert.IsFalse(script.Content.ToString().Contains("{{parameters_test_key_1}}"));
-            Assert.IsFalse(script.Content.ToString().Contains("{{parameters_test_key_2}}"));
+            Assert.True(script.Content.ToString().Contains("[col1]"));
+            Assert.True(script.Content.ToString().Contains("[col2]"));
+            Assert.False(script.Content.ToString().Contains("{{parameters_test_key_1}}"));
+            Assert.False(script.Content.ToString().Contains("{{parameters_test_key_2}}"));
         }
 
-        [TestMethod]
+        [Fact]
         public void ParametersAndFiltersTest()
         {
             DbAccessFacadeMock dbAccessFacade = new DbAccessFacadeMock();
@@ -95,13 +90,13 @@ namespace T.Issue.DB.Migrator
 
             migrator.Migrate(new SqlConnection());
 
-            ClasspathItem script = dbAccessFacade.ClasspathScripts.First(s => s.Version.Equals("201701171635"));
-            Assert.IsNotNull(script);
+            PendingItem script = dbAccessFacade.ClasspathScripts.First(s => s.Version.Equals("201701171635"));
+            Assert.NotNull(script);
 
-            Assert.IsTrue(script.Content.ToString().Contains("0x"));
+            Assert.True(script.Content.ToString().Contains("0x"));
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateSchemaHashFailTest()
         {
             DbAccessFacadeMock dbAccessFacade = new DbAccessFacadeMock();
@@ -119,11 +114,11 @@ namespace T.Issue.DB.Migrator
 
             migrator.Migrate(new SqlConnection());
 
-            Assert.IsTrue(dbAccessFacade.DbItems.Count == 1);
-            Assert.IsTrue(dbAccessFacade.AppliedItems.Count == 0);
+            Assert.True(dbAccessFacade.DbItems.Count == 1);
+            Assert.True(dbAccessFacade.AppliedItems.Count == 0);
         }
 
-        [TestMethod]
+        [Fact]
         public void UpdateSchemaNoUpdateFileTest()
         {
             DbAccessFacadeMock dbAccessFacade = new DbAccessFacadeMock();
@@ -141,8 +136,8 @@ namespace T.Issue.DB.Migrator
 
             migrator.Migrate(new SqlConnection());
 
-            Assert.IsTrue(dbAccessFacade.DbItems.Count == 1);
-            Assert.IsTrue(dbAccessFacade.AppliedItems.Count == 0);
+            Assert.True(dbAccessFacade.DbItems.Count == 1);
+            Assert.True(dbAccessFacade.AppliedItems.Count == 0);
         }
     }
 }

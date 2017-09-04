@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using Common.Logging;
 using DotLiquid;
 using DotLiquid.NamingConventions;
 using T.Issue.Bootstrapper;
 using T.Issue.Bootstrapper.Model;
 using T.Issue.Commons.Utils;
-using log4net;
 using T.Issue.Bootstrapper.Impl;
 
 namespace T.Issue.DB.Migrator.Impl
@@ -81,7 +80,7 @@ namespace T.Issue.DB.Migrator.Impl
                     version = $"{version} ({repeatableVersion})";
                 }
 
-                Log.InfoFormat(version);
+                Log.Info(version);
             }
         }
     }

@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using T.Issue.Commons.Utils;
+using Xunit;
+using Assert = Xunit.Assert;
 
-namespace T.Issue.Commons.Utils.Tests
+namespace T.Issue.Commons.Test.Utils
 {
-    [TestClass]
     public class EncryptionUtilsTests
     {
         private const string Key = "E33FF051A90FC168DF2853407ADB0116";
         private const string Vector = "A25C8CBFB3385259F264E44D8D40C8B4";
 
-        [TestMethod]
+        [Fact]
         public void TestEncryption1()
         {
             byte[] toEncrypt = Guid.NewGuid().ToByteArray();
@@ -20,10 +21,10 @@ namespace T.Issue.Commons.Utils.Tests
 
             byte[] decrypted = EncryptionUtils.DecryptAES(encrypted, StringUtils.HexToByteArray(Key), StringUtils.HexToByteArray(Vector));
 
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(toEncrypt.SequenceEqual(decrypted));
+            Assert.True(toEncrypt.SequenceEqual(decrypted));
         }
 
-        [TestMethod]
+        [Fact]
         public void TestEncryption2()
         {
             string toEncryptStr = "This is test!";
@@ -36,10 +37,10 @@ namespace T.Issue.Commons.Utils.Tests
 
             string decryptedStr = Encoding.UTF8.GetString(decrypted);
 
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(decryptedStr, toEncryptStr);
+            Assert.Equal(decryptedStr, toEncryptStr);
         }
 
-        [TestMethod]
+        [Fact]
         public void TestEncryptionWithEntropy()
         {
             string toEncryptStr = "This is test!";
@@ -53,7 +54,7 @@ namespace T.Issue.Commons.Utils.Tests
 
             string decryptedStr = Encoding.UTF8.GetString(decrypted.Take(toEncryptOrig.Length).ToArray());
 
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(decryptedStr, toEncryptStr);
+            Assert.Equal(decryptedStr, toEncryptStr);
         }
     }
 }

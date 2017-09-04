@@ -1,15 +1,15 @@
 ﻿using System.Data.SqlClient;
 using System.Linq;
+using Common.Logging;
 using T.Issue.Bootstrapper;
 using T.Issue.Bootstrapper.Model;
 using T.Issue.Commons.Utils;
-using log4net;
 
 namespace T.Issue.DB.Migrator.Impl
 {
     internal class BootstrapHandler : IBootstrapHandler<PendingItem>
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(DatabaseMigratorImpl));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(BootstrapHandler));
 
         private readonly IMigratorConfiguration configuration;
         private readonly IDbAccessFacade dbAccessFacade;

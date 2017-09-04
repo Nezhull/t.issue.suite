@@ -1,29 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using T.Issue.DB.Migrator;
-using T.Issue.DB.Migrator.Impl;
 using System.Data.SqlClient;
+using System.Linq;
+using Common.Logging;
 using T.Issue.Bootstrapper.Model;
-using log4net;
 
-namespace T.Issue.DB.MigratorTests
+namespace T.Issue.DB.Migrator.Test
 {
-    class DbAccessFacadeMock : IDbAccessFacade
+    internal class DbAccessFacadeMock : IDbAccessFacade
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(DbAccessFacadeMock));
 
         public IList<AppliedItem> DbItems { get; }
         public IList<AppliedItem> AppliedItems { get; }
-        public IList<ClasspathItem> ClasspathScripts { get; }
+        public IList<PendingItem> ClasspathScripts { get; }
 
         public DbAccessFacadeMock()
         {
             DbItems = new List<AppliedItem>();
             AppliedItems = new List<AppliedItem>();
-            ClasspathScripts = new List<ClasspathItem>();
+            ClasspathScripts = new List<PendingItem>();
         }
 
         public void CreateSchemaTableIfNotExist(SqlConnection connection, IMigratorConfiguration configuration)
@@ -35,7 +31,7 @@ namespace T.Issue.DB.MigratorTests
             return DbItems;
         }
 
-        public void ApplyPendingScripts(SqlConnection connection, IMigratorConfiguration configuration, IEnumerable<ClasspathItem> scripts)
+        public void ApplyPendingScripts(SqlConnection connection, IMigratorConfiguration configuration, IEnumerable<PendingItem> scripts)
         {
             foreach (var updateScript in scripts)
             {

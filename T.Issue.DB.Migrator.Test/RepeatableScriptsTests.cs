@@ -1,39 +1,28 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using T.Issue.DB.Migrator;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using Common.Logging;
 using T.Issue.Bootstrapper.Model;
-using T.Issue.DB.Migrator.Impl;
-using T.Issue.DB.MigratorTests;
-using log4net.Config;
 using T.Issue.DB.Migrator.Config;
+using T.Issue.DB.Migrator.Test.Logging;
+using Xunit;
+using Xunit.Abstractions;
 
-namespace T.Issue.DB.Migrator
+namespace T.Issue.DB.Migrator.Test
 {
-    [TestClass]
     public class RepeatableScriptsTests
     {
-        private IMigratorConfiguration config;
+        private readonly IMigratorConfiguration config;
 
-        [ClassInitialize]
-        public static void ClassInitialize(TestContext testContext)
+        public RepeatableScriptsTests(ITestOutputHelper output)
         {
-            XmlConfigurator.Configure();
-        }
+            LogManager.Adapter = new XunitLoggerFactoryAdapter(LogLevel.Debug, output);
 
-        [TestInitialize]
-        public void Initialize()
-        {
             config = MigratorConfigurationBuilder.Build(Assembly.GetExecutingAssembly(), "TestRepeatableScripts")
                 .SetHaltOnValidationError(true);
         }
 
-        [TestMethod]
+        [Fact]
         public void RepeatableScriptsReapplyTest()
         {
             DbAccessFacadeMock dbAccessFacade = new DbAccessFacadeMock();
@@ -51,11 +40,11 @@ namespace T.Issue.DB.Migrator
 
             migrator.Migrate(new SqlConnection());
 
-            Assert.IsTrue(dbAccessFacade.DbItems.Count == 1);
-            Assert.IsTrue(dbAccessFacade.AppliedItems.Count == 1);
+            Assert.True(dbAccessFacade.DbItems.Count == 1);
+            Assert.True(dbAccessFacade.AppliedItems.Count == 1);
         }
 
-        [TestMethod]
+        [Fact]
         public void RepeatableScriptsNoReapplyTest()
         {
             DbAccessFacadeMock dbAccessFacade = new DbAccessFacadeMock();
@@ -73,8 +62,8 @@ namespace T.Issue.DB.Migrator
 
             migrator.Migrate(new SqlConnection());
 
-            Assert.IsTrue(dbAccessFacade.DbItems.Count == 1);
-            Assert.IsTrue(dbAccessFacade.AppliedItems.Count == 0);
+            Assert.True(dbAccessFacade.DbItems.Count == 1);
+            Assert.True(dbAccessFacade.AppliedItems.Count == 0);
         }
     }
 }
