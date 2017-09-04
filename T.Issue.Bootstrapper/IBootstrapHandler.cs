@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using T.Issue.Bootstrapper.Model;
 
 namespace T.Issue.Bootstrapper

@@ -13,8 +13,10 @@ namespace T.Issue.Commons.Utils
 
             byte[] encrypted;
 
-            using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
+            using (Aes aes = Aes.Create())
             {
+                Assert.NotNull(aes);
+
                 aes.Key = key;
                 aes.IV = vector;
 
@@ -41,8 +43,10 @@ namespace T.Issue.Commons.Utils
         {
             byte[] decrypted;
 
-            using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
+            using (Aes aes = Aes.Create())
             {
+                Assert.NotNull(aes);
+
                 aes.Key = key;
                 aes.IV = vector;
 
@@ -67,8 +71,10 @@ namespace T.Issue.Commons.Utils
 
         public static byte[] GenerateVectorAES()
         {
-            using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
+            using (Aes aes = Aes.Create())
             {
+                Assert.NotNull(aes);
+
                 return aes.IV;
             }
         }
@@ -77,9 +83,13 @@ namespace T.Issue.Commons.Utils
         {
             byte[] entropy = new byte[length];
 
-            using (RNGCryptoServiceProvider secureRandom = new RNGCryptoServiceProvider())
+            using (RandomNumberGenerator secureRandom = RandomNumberGenerator.Create())
             {
+#if NETSTANDARD1_3
+                secureRandom.GetBytes(entropy);
+#else
                 secureRandom.GetNonZeroBytes(entropy);
+#endif
             }
 
             return entropy;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Diagnostics.Contracts;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -38,9 +37,15 @@ namespace T.Issue.DB.Migrator.Impl
                 }
                 Log.Debug("Schema table is not found, creating it now...");
 
-                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(GetType(), "create.sql"))
+#if NETSTANDARD1_3
+                Assembly assembly = typeof(DbAccessFacadeImpl).GetTypeInfo().Assembly;
+                using (var stream = assembly.GetManifestResourceStream(GetType().Namespace + ".create.sql"))
+#elif NET40 || NET452
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                using (var stream = assembly.GetManifestResourceStream(GetType(), "create.sql"))
+#endif
                 {
-                    Contract.Assert(stream != null, "Could not locate create.sql resource");
+                    Assert.NotNull(stream, "Could not locate create.sql resource");
                     foreach (var item in GetSchemaVersionTableScripts(stream, configuration))
                     {
                         using (var command = new SqlCommand(item, connection, tx))

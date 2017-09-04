@@ -1,67 +1,30 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{225B265D-6136-4DA1-AAC5-19B5CFEFBDEB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>T.Issue.Bootstrapper</RootNamespace>
-    <AssemblyName>T.Issue.Bootstrapper</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <LangVersion>7</LangVersion>
+    <TargetFrameworks>netstandard1.3;net40</TargetFrameworks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <PropertyGroup>
+    <Title>Application bootstrapper</Title>
+    <PackageId>T.Issue.Commons</PackageId>
+    <PackageVersion>2.0.1.0</PackageVersion>
+    <Authors>Pavel Jakovlev</Authors>
+    <Company>t.Issue</Company>
+    <Product>t.Issue Bootstrapper</Product>
+    <Description>Generic application bootstrapping library</Description>
+    <Copyright>Copyright© t.Issue 2017</Copyright>
+    <RequireLicenseAcceptance>false</RequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/Nezhull/t.issue.suite/</PackageProjectUrl>
+    <PackageTags>Bootstrap</PackageTags>
+    <IncludeSymbols>True</IncludeSymbols>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+  
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
+    <ProjectReference Include="..\T.Issue.Commons\T.Issue.Commons.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Collectors\ClasspathItemCollectorBase.cs" />
-    <Compile Include="Collectors\IBootstrapItemCollector.cs" />
-    <Compile Include="IBootstrapHandler.cs" />
-    <Compile Include="IBootstrapper.cs" />
-    <Compile Include="Impl\BootstrapperImpl.cs" />
-    <Compile Include="Model\AppliedItem.cs" />
-    <Compile Include="Model\BootstrapItem.cs" />
-    <Compile Include="Model\PendingItem.cs" />
-    <Compile Include="Model\ErrorType.cs" />
-    <Compile Include="Model\ItemLocation.cs" />
-    <Compile Include="Model\ItemType.cs" />
-    <Compile Include="Model\ValidationContext.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Folder Include="Properties\" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\T.Issue.Commons\T.Issue.Commons.csproj">
-      <Project>{ad68189e-1e1e-4f02-8652-307b0db04f77}</Project>
-      <Name>T.Issue.Commons</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

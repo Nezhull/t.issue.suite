@@ -12,7 +12,7 @@ namespace T.Issue.Commons.Utils
         /// <returns></returns>
         public static byte[] GetSHA1Hash(string filePath)
         {
-            using (var sha1 = new SHA1CryptoServiceProvider())
+            using (var sha1 = SHA1.Create())
             {
                 return GetHash(filePath, sha1);
             }
@@ -25,7 +25,7 @@ namespace T.Issue.Commons.Utils
         /// <returns></returns>
         public static byte[] GetSHA1Hash(Stream stream)
         {
-            using (var sha1 = new SHA1CryptoServiceProvider())
+            using (var sha1 = SHA1.Create())
             {
                 return GetHash(stream, sha1);
             }
@@ -38,7 +38,7 @@ namespace T.Issue.Commons.Utils
         /// <returns></returns>
         public static byte[] GetSHA1Hash(byte[] buffer)
         {
-            using (var sha1 = new SHA1CryptoServiceProvider())
+            using (var sha1 = SHA1.Create())
             {
                 return GetHash(buffer, sha1);
             }
@@ -51,7 +51,7 @@ namespace T.Issue.Commons.Utils
         /// <returns></returns>
         public static byte[] GetMD5Hash(string filePath)
         {
-            using (var md5 = new MD5CryptoServiceProvider())
+            using (var md5 = MD5.Create())
             {
                 return GetHash(filePath, md5);
             }
@@ -64,7 +64,7 @@ namespace T.Issue.Commons.Utils
         /// <returns></returns>
         public static byte[] GetMD5Hash(Stream stream)
         {
-            using (var md5 = new MD5CryptoServiceProvider())
+            using (var md5 = MD5.Create())
             {
                 return GetHash(stream, md5);
             }
@@ -77,7 +77,7 @@ namespace T.Issue.Commons.Utils
         /// <returns></returns>
         public static byte[] GetMD5Hash(byte[] buffer)
         {
-            using (var md5 = new MD5CryptoServiceProvider())
+            using (var md5 = MD5.Create())
             {
                 return GetHash(buffer, md5);
             }
