@@ -6,7 +6,7 @@
 
   <PropertyGroup>
     <Title>Application bootstrapper</Title>
-    <PackageId>T.Issue.Commons</PackageId>
+    <PackageId>T.Issue.Bootstrapper</PackageId>
     <PackageVersion>2.0.1.0</PackageVersion>
     <Authors>Pavel Jakovlev</Authors>
     <Company>t.Issue</Company>
