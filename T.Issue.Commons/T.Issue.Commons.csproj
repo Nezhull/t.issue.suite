@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard1.3;net40</TargetFrameworks>
+    <DefineConstants>JETBRAINS_ANNOTATIONS</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup>
     <Title>t.Issue Commons</Title>
     <PackageId>T.Issue.Commons</PackageId>
-    <PackageVersion>1.4.0.0</PackageVersion>
+    <PackageVersion>1.4.1.0</PackageVersion>
     <Authors>Pavel Jakovlev</Authors>
     <Company>t.Issue</Company>
     <Product>t.Issue Commons</Product>
@@ -18,7 +19,6 @@
     <PackageTags>Commons PersonalCode DateTime Hash MD5 SHA1</PackageTags>
     <IncludeSymbols>True</IncludeSymbols>
   </PropertyGroup>
-
   
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="11.0.0" />
