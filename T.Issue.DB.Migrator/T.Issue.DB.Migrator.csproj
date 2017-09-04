@@ -7,7 +7,7 @@
   <PropertyGroup>
     <Title>DB Migrator</Title>
     <PackageId>T.Issue.DB.Migrator</PackageId>
-    <PackageVersion>1.4.1.0</PackageVersion>
+    <PackageVersion>1.4.2.0</PackageVersion>
     <Authors>Marius Šlepikas; Pavel Jakovlev</Authors>
     <Company>t.Issue</Company>
     <Product>t.Issue DB Migrator</Product>
