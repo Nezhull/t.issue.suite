@@ -7,13 +7,12 @@ namespace T.Issue.Commons.Utils
     /// Utility class for LT personal code.
     /// </summary>
     public static class PersonalCodeUtils {
+	    private const int PersonalCodeLength = 11;
+	    private const string EmbeddedDateFormat = "yyMMdd";
+	    private static readonly int[] CheckSum1Weights = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 1 };
+	    private static readonly int[] CheckSum2Weights = { 3, 4, 5, 6, 7, 8, 9, 1, 2, 3 };
 
-	    private static readonly int PERSONAL_CODE_LENGTH = 11;
-	    private static readonly int[] CHECK_SUM_1_WEIGHTS = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 1 };
-	    private static readonly int[] CHECK_SUM_2_WEIGHTS = { 3, 4, 5, 6, 7, 8, 9, 1, 2, 3 };
-	    private static readonly string EMBEDDED_DATE_FORMAT = "yyMMdd";
-
-        /// <summary>
+	    /// <summary>
         /// Gets the date of birth contained in a lithuanian personal code.
         /// </summary>
         /// <param name="personalCode">Personal code.</param>
@@ -26,8 +25,8 @@ namespace T.Issue.Commons.Utils
 		    }
 
 		    string majorYears = GetMajorYears(personalCode);
-		    string date = personalCode.Substring(1, EMBEDDED_DATE_FORMAT.Length);
-		    return majorYears == null ? null : DateTimeUtils.ParseDateTime(majorYears + date, "yy" + EMBEDDED_DATE_FORMAT);
+		    string date = personalCode.Substring(1, EmbeddedDateFormat.Length);
+		    return majorYears == null ? null : DateTimeUtils.ParseDateTime(majorYears + date, "yy" + EmbeddedDateFormat);
 	    }
 
 	    /**
@@ -43,20 +42,20 @@ namespace T.Issue.Commons.Utils
 		    //    XXX - sequence number
 		    //    K - control digit
 
-		    if (personalCode.Length != PERSONAL_CODE_LENGTH || !personalCode.All(char.IsNumber)) {
+		    if (personalCode.Length != PersonalCodeLength || !personalCode.All(char.IsNumber)) {
 			    return false;
 		    }
 
 		    int checkSum1 = 0;
 		    int checkSum2 = 0;
 
-		    for (int i = 0; i < PERSONAL_CODE_LENGTH - 1; i++) { //iterate over all except control
+		    for (int i = 0; i < PersonalCodeLength - 1; i++) { //iterate over all except control
 			    int digit = (int) char.GetNumericValue(personalCode[i]);
-			    checkSum1 += digit * CHECK_SUM_1_WEIGHTS[i];
-			    checkSum2 += digit * CHECK_SUM_2_WEIGHTS[i];
+			    checkSum1 += digit * CheckSum1Weights[i];
+			    checkSum2 += digit * CheckSum2Weights[i];
 		    }
 
-		    int control = (int) char.GetNumericValue(personalCode[PERSONAL_CODE_LENGTH - 1]);
+		    int control = (int) char.GetNumericValue(personalCode[PersonalCodeLength - 1]);
 		    int testControl = checkSum1 % 11;
 
 		    if (testControl == 10) {

@@ -62,15 +62,6 @@ namespace T.Issue.Commons.Utils
             }
         }
 
-        [ContractAnnotation("str:null => halt")]
-        public static void IsNotWhiteSpace(string str, string message = "String is empty!")
-        {
-            if (str == null || (string.Empty != str && string.Empty == str.Trim()))
-            {
-                throw new AssertionException(AssertionType.IsNotWhiteSpace, message);
-            }
-        }
-
         [ContractAnnotation("array:null => halt")]
         public static void IsNotEmpty<T>(T[] array, string message = "Array is empty!")
         {
@@ -122,7 +113,6 @@ namespace T.Issue.Commons.Utils
         NotNull,
         IsTrue,
         HasText,
-        IsNotEmpty,
-        IsNotWhiteSpace
+        IsNotEmpty
     }
 }
