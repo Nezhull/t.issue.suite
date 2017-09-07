@@ -6,7 +6,7 @@
   <PropertyGroup>
     <Title>t.Issue Commons</Title>
     <PackageId>T.Issue.Commons</PackageId>
-    <PackageVersion>1.4.1.0</PackageVersion>
+    <PackageVersion>1.5.0.0</PackageVersion>
     <Authors>Pavel Jakovlev</Authors>
     <Company>t.Issue</Company>
     <Product>t.Issue Commons</Product>

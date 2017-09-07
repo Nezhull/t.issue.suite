@@ -1,104 +1,72 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Security.Cryptography;
 
 namespace T.Issue.Commons.Utils
 {
     public static class HashUtils
     {
-        /// <summary>
-        /// Gets a hash of file using SHA1.
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        public static byte[] GetSHA1Hash(string filePath)
+        public static byte[] GetHash<T>(string filePath, FileMode fileMode = FileMode.Open,
+            FileAccess fileAccess = FileAccess.Read, FileShare fileShare = FileShare.ReadWrite) where T : HashAlgorithm
         {
-            using (var sha1 = SHA1.Create())
+            using (HashAlgorithm hashAlgorithm = CreateHashAlgorithm(typeof(T)))
             {
-                return GetHash(filePath, sha1);
+                using (var fs = new FileStream(filePath, fileMode, fileAccess, fileShare))
+                {
+                    return GetHash(fs, hashAlgorithm);
+                }
             }
         }
 
-        /// <summary>
-        /// Gets a hash of stream using SHA1.
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-        public static byte[] GetSHA1Hash(Stream stream)
+        public static byte[] GetHash<T>(Stream stream) where T : HashAlgorithm
         {
-            using (var sha1 = SHA1.Create())
+            using (HashAlgorithm hashAlgorithm = CreateHashAlgorithm(typeof(T)))
             {
-                return GetHash(stream, sha1);
-            }
-        }
-        
-        /// <summary>
-        /// Gets a hash of byte array using SHA1.
-        /// </summary>
-        /// <param name="buffer"></param>
-        /// <returns></returns>
-        public static byte[] GetSHA1Hash(byte[] buffer)
-        {
-            using (var sha1 = SHA1.Create())
-            {
-                return GetHash(buffer, sha1);
+                return GetHash(stream, hashAlgorithm);
             }
         }
 
-        /// <summary>
-        /// Gets a hash of file using MD5.
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <returns></returns>
-        public static byte[] GetMD5Hash(string filePath)
+        public static byte[] GetHash<T>(byte[] content) where T : HashAlgorithm
         {
-            using (var md5 = MD5.Create())
+            using (HashAlgorithm hashAlgorithm = CreateHashAlgorithm(typeof(T)))
             {
-                return GetHash(filePath, md5);
+                return GetHash(content, hashAlgorithm);
             }
         }
 
-        /// <summary>
-        /// Gets a hash of stream using MD5.
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-        public static byte[] GetMD5Hash(Stream stream)
+        public static byte[] GetHash(string filePath, HashAlgorithm hasher, FileMode fileMode = FileMode.Open,
+            FileAccess fileAccess = FileAccess.Read, FileShare fileShare = FileShare.ReadWrite)
         {
-            using (var md5 = MD5.Create())
-            {
-                return GetHash(stream, md5);
-            }
-        }
-        
-        /// <summary>
-        /// Gets a hash of byte array using MD5.
-        /// </summary>
-        /// <param name="buffer"></param>
-        /// <returns></returns>
-        public static byte[] GetMD5Hash(byte[] buffer)
-        {
-            using (var md5 = MD5.Create())
-            {
-                return GetHash(buffer, md5);
-            }
-        }
-
-        private static byte[] GetHash(string filePath, HashAlgorithm hasher)
-        {
-            using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var fs = new FileStream(filePath, fileMode, fileAccess, fileShare))
             {
                 return GetHash(fs, hasher);
             }
         }
 
-        private static byte[] GetHash(Stream s, HashAlgorithm hasher)
+        public static byte[] GetHash(Stream s, HashAlgorithm hasher)
         {
             return hasher.ComputeHash(s);
         }
 
-        private static byte[] GetHash(byte[] content, HashAlgorithm hasher)
+        public static byte[] GetHash(byte[] content, HashAlgorithm hasher)
         {
             return hasher.ComputeHash(content);
+        }
+
+        private static HashAlgorithm CreateHashAlgorithm(Type hashType)
+        {
+#if NETSTANDARD1_3
+            MethodInfo methodInfo = hashType.GetRuntimeMethod("Create", new Type[0]);
+#else
+            MethodInfo methodInfo = hashType.GetMethod("Create", new Type[0]);
+#endif
+            Assert.IsTrue(methodInfo?.IsStatic, $"Can not resolve hash algorithm for {hashType}");
+
+            HashAlgorithm hashAlgorithm = methodInfo.Invoke(null, new object[0]) as HashAlgorithm;
+            Assert.NotNull(hashAlgorithm, $"Can not create hash algorithm for {hashType}");
+
+            return hashAlgorithm;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using Common.Logging;
@@ -15,9 +16,9 @@ namespace T.Issue.DB.Migrator.Impl
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(ClasspathItemCollector));
         private static readonly Regex ScriptNameRegex = new Regex(@"^(V|R)(\d{4}\.\d{2}\.\d{2}_\d{4})_(.+)\.sql$");
-        
+
         private readonly Hash templateContext;
-        
+
         public ClasspathItemCollector(IList<ItemLocation> itemLocations, IDictionary<string, object> templateContext) : base(itemLocations)
         {
             this.templateContext = Hash.FromDictionary(templateContext);
@@ -47,7 +48,7 @@ namespace T.Issue.DB.Migrator.Impl
                     Version = version,
                     Name = itemName,
                     Content = PreprocessScriptTemplate(location, template),
-                    Checksum = StringUtils.ByteArrayToHex(HashUtils.GetMD5Hash(Encoding.UTF8.GetBytes(template)))
+                    Checksum = StringUtils.ByteArrayToHex(HashUtils.GetHash<MD5>(Encoding.UTF8.GetBytes(template)))
                 };
 
                 Log.DebugFormat("Adding file {0} as update script with version {1}", itemName, version);
@@ -55,7 +56,7 @@ namespace T.Issue.DB.Migrator.Impl
                 return item;
             }
         }
-        
+
         private string PreprocessScriptTemplate(ItemLocation location, string scriptTemplate)
         {
             Template template = Template.Parse(scriptTemplate);
