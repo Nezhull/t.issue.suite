@@ -31,3 +31,25 @@ public void Method(string param1, int param2, IList<long> param3)
     // ...
 }
 ```
+
+### DateTime Utils
+Utility methods to format and parse `DateTime` from/to string using `hh:mm`, `yyyy-MM-dd` and `yyyy-MM-dd HH:mm:ss` formats.
+
+#### Utility methods:
+* `FormatDate(DateTime/DateTime?)` - formats `DateTime` or `DateTime?` using `yyyy-MM-dd` format;
+* `FormatDateTime(DateTime/DateTime?)` - formats `DateTime` or `DateTime?` using `yyyy-MM-dd HH:mm:ss` format;
+* `FormatTimeSpan(TimeSpan/TimeSpan?)` - formats `TimeSpan` or `TimeSpan?` using `hh:mm` format;
+* `ParseDateTime(string)` - parses `DateTime?` from string using `yyyy-MM-dd HH:mm:ss` format and `CultureInfo.InvariantCulture` _(returns `null` on error)_;
+* `ParseDateTime(string, string)` - parses `DateTime?` from string using custom format and `CultureInfo.InvariantCulture` _(returns `null` on error)_;
+
+#### Examples
+```csharp
+public DateTime? ParseDateTime(string dateTimeStr, string format = "yyyyMMdd")
+{
+    Assert.HasText(format);
+
+    return DateTimeUtils.ParseDateTime(dateTimeStr, format);
+}
+```
+
+### Encryption Utils
