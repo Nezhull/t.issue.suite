@@ -1,9 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFrameworks>netstandard1.3;net40</TargetFrameworks>
   </PropertyGroup>
-
   <PropertyGroup>
     <Title>Application bootstrapper</Title>
     <PackageId>T.Issue.Bootstrapper</PackageId>
@@ -18,13 +16,10 @@
     <PackageTags>Bootstrap</PackageTags>
     <IncludeSymbols>True</IncludeSymbols>
   </PropertyGroup>
-  
   <ItemGroup>
     <ProjectReference Include="..\T.Issue.Commons\T.Issue.Commons.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
-
 </Project>

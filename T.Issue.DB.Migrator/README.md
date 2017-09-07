@@ -1,4 +1,4 @@
-# db-migrator
+# t.Issue DB Migrator
 Database migration and/or schema versioning library for .NET
 ## About
 Inspired by [Flyway](https://flywaydb.org/) created by Pavel Jakovlev and Marius Šlepikas.
