@@ -10,7 +10,7 @@ namespace T.Issue.Commons.Utils
         public static byte[] GetHash<T>(string filePath, FileMode fileMode = FileMode.Open,
             FileAccess fileAccess = FileAccess.Read, FileShare fileShare = FileShare.ReadWrite) where T : HashAlgorithm
         {
-            using (HashAlgorithm hashAlgorithm = CreateHashAlgorithm(typeof(T)))
+            using (HashAlgorithm hashAlgorithm = CreateHashAlgorithm<T>())
             {
                 using (var fs = new FileStream(filePath, fileMode, fileAccess, fileShare))
                 {
@@ -21,7 +21,7 @@ namespace T.Issue.Commons.Utils
 
         public static byte[] GetHash<T>(Stream stream) where T : HashAlgorithm
         {
-            using (HashAlgorithm hashAlgorithm = CreateHashAlgorithm(typeof(T)))
+            using (HashAlgorithm hashAlgorithm = CreateHashAlgorithm<T>())
             {
                 return GetHash(stream, hashAlgorithm);
             }
@@ -29,7 +29,7 @@ namespace T.Issue.Commons.Utils
 
         public static byte[] GetHash<T>(byte[] content) where T : HashAlgorithm
         {
-            using (HashAlgorithm hashAlgorithm = CreateHashAlgorithm(typeof(T)))
+            using (HashAlgorithm hashAlgorithm = CreateHashAlgorithm<T>())
             {
                 return GetHash(content, hashAlgorithm);
             }
@@ -54,17 +54,13 @@ namespace T.Issue.Commons.Utils
             return hasher.ComputeHash(content);
         }
 
-        private static HashAlgorithm CreateHashAlgorithm(Type hashType)
+        private static HashAlgorithm CreateHashAlgorithm<T>()
         {
-#if NETSTANDARD1_3
-            MethodInfo methodInfo = hashType.GetRuntimeMethod("Create", new Type[0]);
-#else
-            MethodInfo methodInfo = hashType.GetMethod("Create", new Type[0]);
-#endif
-            Assert.IsTrue(methodInfo?.IsStatic, $"Can not resolve hash algorithm for {hashType}");
+            MethodInfo methodInfo = ReflectionUtils.GetMethod<T>("Create", new Type[0]);
+            Assert.IsTrue(methodInfo?.IsStatic, $"Can not resolve hash algorithm for {typeof(T)}");
 
             HashAlgorithm hashAlgorithm = methodInfo.Invoke(null, new object[0]) as HashAlgorithm;
-            Assert.NotNull(hashAlgorithm, $"Can not create hash algorithm for {hashType}");
+            Assert.NotNull(hashAlgorithm, $"Can not create hash algorithm for {typeof(T)}");
 
             return hashAlgorithm;
         }

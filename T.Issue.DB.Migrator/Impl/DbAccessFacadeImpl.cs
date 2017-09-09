@@ -37,11 +37,11 @@ namespace T.Issue.DB.Migrator.Impl
                 }
                 Log.Debug("Schema table is not found, creating it now...");
 
+                Assembly assembly = ReflectionUtils.GetAssembly<DbAccessFacadeImpl>();
+
 #if NETSTANDARD1_3
-                Assembly assembly = typeof(DbAccessFacadeImpl).GetTypeInfo().Assembly;
                 using (var stream = assembly.GetManifestResourceStream(GetType().Namespace + ".create.sql"))
 #elif NET40 || NET452
-                Assembly assembly = Assembly.GetExecutingAssembly();
                 using (var stream = assembly.GetManifestResourceStream(GetType(), "create.sql"))
 #endif
                 {

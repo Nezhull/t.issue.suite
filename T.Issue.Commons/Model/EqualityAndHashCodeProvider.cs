@@ -4,22 +4,11 @@ namespace T.Issue.Commons.Model
 {
     public abstract class EqualityAndHashCodeProvider<T, TKey> : IEquatable<T> where T : EqualityAndHashCodeProvider<T, TKey>
     {
-        private int? hashCode;
-
         public abstract TKey Id { get; set; }
 
         public override int GetHashCode()
         {
-            if (hashCode.HasValue)
-            {
-                return hashCode.Value;
-            }
-            if (Id == null)
-            {
-                hashCode = base.GetHashCode();
-                return hashCode.Value;
-            }
-            return Id.GetHashCode();
+            return Id?.GetHashCode() ?? base.GetHashCode();
         }
 
         public bool Equals(T other)
