@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 
 namespace T.Issue.Commons.Utils
@@ -16,7 +17,7 @@ namespace T.Issue.Commons.Utils
         /// Gets the date of birth contained in a lithuanian personal code.
         /// </summary>
         /// <param name="personalCode">Personal code.</param>
-        /// <returns>The date of birth or <i>null</i> if the personal code is invalid.</returns>
+        /// <returns>The date of birth or <c>null</c> if the personal code is invalid.</returns>
 	    public static DateTime? GetDateOfBirth(string personalCode) {
 		    Assert.NotNull(personalCode, "Parameter personalCode is required");
 
@@ -26,14 +27,14 @@ namespace T.Issue.Commons.Utils
 
 		    string majorYears = GetMajorYears(personalCode);
 		    string date = personalCode.Substring(1, EmbeddedDateFormat.Length);
-		    return majorYears == null ? null : DateTimeUtils.ParseDateTime(majorYears + date, "yy" + EmbeddedDateFormat);
+		    return majorYears == null ? null : DateTimeUtils.ParseDateTime(majorYears + date, "yy" + EmbeddedDateFormat, CultureInfo.InvariantCulture);
 	    }
 
-	    /**
-	     * Validates a lithuanian personal code using the embedded control digit
-	     * @param personalCode the personal code to validate
-	     * @return whether the code is valid or not
-	     */
+	    /// <summary>
+	    /// Validates a lithuanian personal code using the embedded control digit.
+	    /// </summary>
+	    /// <param name="personalCode">Personal code.</param>
+	    /// <returns>Whether the code is valid or not.</returns>
 	    public static bool IsValid(string personalCode) {
 		    Assert.NotNull(personalCode, "Parameter personalCode is required");
 		    //Structure: LYYMMDDXXXK
@@ -68,16 +69,20 @@ namespace T.Issue.Commons.Utils
 
 	    private static string GetMajorYears(string personalCode) {
 		    char gender = personalCode[0];
-		    if (gender == '1' || gender == '2') {
-			    return "18";
+		    switch (gender)
+		    {
+			    case '1':
+			    case '2':
+				    return "18";
+			    case '3':
+			    case '4':
+				    return "19";
+			    case '5':
+			    case '6':
+				    return "20";
+				default:
+					return null;
 		    }
-		    if (gender == '3' || gender == '4') {
-			    return "19";
-		    }
-		    if (gender == '5' || gender == '6') {
-			    return "20";
-		    }
-		    return null;
 	    }
     }
 }

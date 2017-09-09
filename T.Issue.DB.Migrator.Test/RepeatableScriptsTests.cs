@@ -3,10 +3,12 @@ using System.Data.SqlClient;
 using System.Reflection;
 using Common.Logging;
 using T.Issue.Bootstrapper.Model;
+using T.Issue.Commons.Utils;
 using T.Issue.DB.Migrator.Config;
 using T.Issue.DB.Migrator.Test.Logging;
 using Xunit;
 using Xunit.Abstractions;
+using Assert = Xunit.Assert;
 
 namespace T.Issue.DB.Migrator.Test
 {
@@ -18,7 +20,8 @@ namespace T.Issue.DB.Migrator.Test
         {
             LogManager.Adapter = new XunitLoggerFactoryAdapter(LogLevel.Debug, output);
 
-            config = MigratorConfigurationBuilder.Build(Assembly.GetExecutingAssembly(), "TestRepeatableScripts")
+            Assembly assembly = ReflectionUtils.GetAssembly<RepeatableScriptsTests>();
+            config = MigratorConfigurationBuilder.Build(assembly, "TestRepeatableScripts")
                 .SetHaltOnValidationError(true);
         }
 

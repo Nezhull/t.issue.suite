@@ -5,8 +5,20 @@ using System.Security.Cryptography;
 
 namespace T.Issue.Commons.Utils
 {
+    /// <summary>
+    ///
+    /// </summary>
     public static class HashUtils
     {
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="fileMode"></param>
+        /// <param name="fileAccess"></param>
+        /// <param name="fileShare"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static byte[] GetHash<T>(string filePath, FileMode fileMode = FileMode.Open,
             FileAccess fileAccess = FileAccess.Read, FileShare fileShare = FileShare.ReadWrite) where T : HashAlgorithm
         {
@@ -19,6 +31,12 @@ namespace T.Issue.Commons.Utils
             }
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static byte[] GetHash<T>(Stream stream) where T : HashAlgorithm
         {
             using (HashAlgorithm hashAlgorithm = CreateHashAlgorithm<T>())
@@ -27,6 +45,12 @@ namespace T.Issue.Commons.Utils
             }
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="content"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static byte[] GetHash<T>(byte[] content) where T : HashAlgorithm
         {
             using (HashAlgorithm hashAlgorithm = CreateHashAlgorithm<T>())
@@ -35,6 +59,15 @@ namespace T.Issue.Commons.Utils
             }
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="hasher"></param>
+        /// <param name="fileMode"></param>
+        /// <param name="fileAccess"></param>
+        /// <param name="fileShare"></param>
+        /// <returns></returns>
         public static byte[] GetHash(string filePath, HashAlgorithm hasher, FileMode fileMode = FileMode.Open,
             FileAccess fileAccess = FileAccess.Read, FileShare fileShare = FileShare.ReadWrite)
         {
@@ -44,11 +77,23 @@ namespace T.Issue.Commons.Utils
             }
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="hasher"></param>
+        /// <returns></returns>
         public static byte[] GetHash(Stream s, HashAlgorithm hasher)
         {
             return hasher.ComputeHash(s);
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="hasher"></param>
+        /// <returns></returns>
         public static byte[] GetHash(byte[] content, HashAlgorithm hasher)
         {
             return hasher.ComputeHash(content);

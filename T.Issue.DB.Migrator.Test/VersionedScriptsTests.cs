@@ -4,10 +4,12 @@ using System.Linq;
 using System.Reflection;
 using Common.Logging;
 using T.Issue.Bootstrapper.Model;
+using T.Issue.Commons.Utils;
 using T.Issue.DB.Migrator.Config;
 using T.Issue.DB.Migrator.Test.Logging;
 using Xunit;
 using Xunit.Abstractions;
+using Assert = Xunit.Assert;
 
 namespace T.Issue.DB.Migrator.Test
 {
@@ -19,8 +21,9 @@ namespace T.Issue.DB.Migrator.Test
         {
             LogManager.Adapter = new XunitLoggerFactoryAdapter(LogLevel.Debug, output);
 
-            config = MigratorConfigurationBuilder.Build(Assembly.GetExecutingAssembly(), "TestScripts")
-                .AddScriptsLocation(Assembly.GetExecutingAssembly(), "TestScripts1")
+            Assembly assembly = ReflectionUtils.GetAssembly<VersionedScriptsTests>();
+            config = MigratorConfigurationBuilder.Build(assembly, "TestScripts")
+                .AddScriptsLocation(assembly, "TestScripts1")
                 .SetHaltOnValidationError(true);
         }
 
@@ -84,7 +87,9 @@ namespace T.Issue.DB.Migrator.Test
         {
             DbAccessFacadeMock dbAccessFacade = new DbAccessFacadeMock();
 
-            config.AddScriptsLocation(Assembly.GetExecutingAssembly(), "TemplateTestScripts");
+            Assembly assembly = ReflectionUtils.GetAssembly<VersionedScriptsTests>();
+
+            config.AddScriptsLocation(assembly, "TemplateTestScripts");
 
             IDatabaseMigrator migrator = DatabaseMigratorBuilder.Build(config, dbAccessFacade);
 

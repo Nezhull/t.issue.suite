@@ -1,22 +1,18 @@
 ﻿using System;
+using T.Issue.Commons.Utils;
 
 namespace T.Issue.Commons.Extensions
 {
     public static class StringExtensions
     {
-        public static string SafeSubstring(this string s, int length)
+        public static string SafeSubstring(this string s, int startIndex, int length)
         {
             if (null == s)
             {
                 return null;
             }
 
-            if (length < s.Length)
-            {
-                return s.Substring(0, length);
-            }
-
-            return s;
+            return length < s.Length ? s.Substring(startIndex, length) : s;
         }
 
         /// <summary>
@@ -24,22 +20,13 @@ namespace T.Issue.Commons.Extensions
         /// </summary>
         /// <param name="str">String to truncate.</param>
         /// <param name="length">Maximum string length.</param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="AssertionException">If <c>length &lt;= 0</c>.</exception>
         /// <returns>Original string or a truncated one if the original was too long.</returns>
         public static string Truncate(this string str, int length)
         {
-            if (length < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(length), "Length must be >= 0");
-            }
+            Assert.IsTrue(length > 0, "Length must be > 0");
 
-            if (str == null)
-            {
-                return null;
-            }
-
-            int maxLength = Math.Min(str.Length, length);
-            return str.Substring(0, maxLength);
+            return str?.Substring(0, Math.Min(str.Length, length));
         }
     }
 }

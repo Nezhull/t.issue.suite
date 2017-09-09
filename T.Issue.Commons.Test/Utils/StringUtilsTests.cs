@@ -7,7 +7,7 @@ using Assert = Xunit.Assert;
 
 namespace T.Issue.Commons.Test.Utils
 {
-    public class StringUtilsTests
+    public class DateTimeUtilsTests
     {
         [Fact]
         public void TestHexConversion1()
@@ -21,7 +21,7 @@ namespace T.Issue.Commons.Test.Utils
             byte[] fromHex = StringUtils.HexToByteArray(hex);
 
             string strFromHex = Encoding.UTF8.GetString(fromHex);
-            
+
             Assert.Equal(str, strFromHex);
         }
 
@@ -33,7 +33,7 @@ namespace T.Issue.Commons.Test.Utils
             string hex = StringUtils.ByteArrayToHex(bytes);
 
             byte[] fromHex = StringUtils.HexToByteArray(hex);
-            
+
             Assert.True(bytes.SequenceEqual(fromHex));
         }
     }

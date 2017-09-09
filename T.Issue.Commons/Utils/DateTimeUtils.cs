@@ -19,7 +19,7 @@ namespace T.Issue.Commons.Utils
         public const string DateFormat = "yyyy-MM-dd";
 
         /// <summary>
-        /// Standard format for date and time.
+        /// Standard format for date and time with seconds.
         /// </summary>
         public const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
 
@@ -27,82 +27,52 @@ namespace T.Issue.Commons.Utils
         /// Formats <see cref="DateTime"/> using <see cref="DateFormat"/> format, <code>null</code> safe.
         /// </summary>
         /// <param name="date">Date to be formatted.</param>
+        /// <param name="format"></param>
+        /// <param name="culture"></param>
         /// <returns>Date string.</returns>
-        public static string FormatDate(DateTime? date)
+        public static string FormatDateTime(DateTime? date, string format = DateTimeFormat, CultureInfo culture = null)
         {
-            if (!date.HasValue)
-            {
-                return string.Empty;
-            }
-            return FormatDate(date.Value);
+            return !date.HasValue ? string.Empty : FormatDateTime(date.Value, format, culture);
         }
 
         /// <summary>
-        /// Formats <see cref="DateTime"/> using <see cref="DateTimeFormat"/> format, <code>null</code> safe.
-        /// </summary>
-        /// <param name="dateTime">Date and time to be formatted.</param>
-        /// <returns>Date and time string.</returns>
-        public static string FormatDateTime(DateTime? dateTime)
-        {
-            if (!dateTime.HasValue)
-            {
-                return string.Empty;
-            }
-            return FormatDateTime(dateTime.Value);
-        }
-
-        /// <summary>
-        /// Formats <see cref="DateTime"/> using <see cref="DateFormat"/> format.
+        /// Formats <see cref="DateTime"/> using provided format.
         /// </summary>
         /// <param name="date">Date to be formatted.</param>
+        /// <param name="format"></param>
+        /// <param name="culture"></param>
         /// <returns>Date string.</returns>
-        public static string FormatDate(DateTime date)
+        public static string FormatDateTime(DateTime date, string format = DateTimeFormat, CultureInfo culture = null)
         {
-            return date.ToString(DateFormat);
-        }
+            Assert.HasText(format);
 
-        /// <summary>
-        /// Formats <see cref="DateTime"/> using <see cref="DateTimeFormat"/> format.
-        /// </summary>
-        /// <param name="dateTime">Date and time to be formatted.</param>
-        /// <returns>Date and time string.</returns>
-        public static string FormatDateTime(DateTime dateTime)
-        {
-            return dateTime.ToString(DateTimeFormat);
+            return date.ToString(format, culture ?? CultureInfo.CurrentCulture);
         }
 
         /// <summary>
         /// Formats <see cref="TimeSpan"/> using <see cref="TimeSpanFormat"/> format, <code>null</code> safe.
         /// </summary>
         /// <param name="timeSpan">Timespan to be formatted.</param>
+        /// <param name="format"></param>
+        /// <param name="culture"></param>
         /// <returns>Timespan string.</returns>
-        public static string FormatTimeSpan(TimeSpan? timeSpan)
+        public static string FormatTimeSpan(TimeSpan? timeSpan, string format = TimeSpanFormat, CultureInfo culture = null)
         {
-            if (!timeSpan.HasValue)
-            {
-                return string.Empty;
-            }
-            return FormatTimeSpan(timeSpan.Value);
+            return !timeSpan.HasValue ? string.Empty : FormatTimeSpan(timeSpan.Value, format, culture);
         }
 
         /// <summary>
         /// Formats <see cref="TimeSpan"/> using <see cref="TimeSpanFormat"/> format.
         /// </summary>
         /// <param name="timeSpan">Timespan to be formatted.</param>
+        /// <param name="format"></param>
+        /// <param name="culture"></param>
         /// <returns>Timespan string.</returns>
-        public static string FormatTimeSpan(TimeSpan timeSpan)
+        public static string FormatTimeSpan(TimeSpan timeSpan, string format = TimeSpanFormat, CultureInfo culture = null)
         {
-            return timeSpan.ToString(TimeSpanFormat);
-        }
+            Assert.HasText(format);
 
-        /// <summary>
-        /// Parses <see cref="DateTime"/> using <see cref="DateTimeFormat"/> date and time format.
-        /// </summary>
-        /// <param name="dateTimeStr">Date and time to be parsed.</param>
-        /// <returns>Date and time object.</returns>
-        public static DateTime? ParseDateTime(string dateTimeStr)
-        {
-            return ParseDateTime(dateTimeStr, DateTimeFormat);
+            return timeSpan.ToString(TimeSpanFormat, culture ?? CultureInfo.CurrentCulture);
         }
 
         /// <summary>
@@ -110,14 +80,16 @@ namespace T.Issue.Commons.Utils
         /// </summary>
         /// <param name="dateTimeStr">Date and time to be parsed.</param>
         /// <param name="format">Custom date and time format.</param>
+        /// <param name="culture"></param>
+        /// <param name="style"></param>
         /// <returns>Date and time object.</returns>
-        public static DateTime? ParseDateTime(string dateTimeStr, string format)
+        public static DateTime? ParseDateTime(string dateTimeStr, string format = DateTimeFormat, CultureInfo culture = null, DateTimeStyles style = DateTimeStyles.None)
         {
             Assert.HasText(format);
 
             DateTime dateTime;
 
-            if (DateTime.TryParseExact(dateTimeStr, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime))
+            if (DateTime.TryParseExact(dateTimeStr, format, culture ?? CultureInfo.CurrentCulture, style, out dateTime))
             {
                 return dateTime;
             }
@@ -126,32 +98,22 @@ namespace T.Issue.Commons.Utils
         }
 
         /// <summary>
-        /// Formats date range, <code>null</code> safe.
+        /// Formats date range, <c>null</c> safe.
         /// </summary>
         /// <param name="from">Date from.</param>
         /// <param name="to">Date to.</param>
-        /// <param name="pattern">Formatting pattern.</param>
-        /// <returns></returns>
-        public static string FormatDateRange(DateTime? from, DateTime? to, string pattern = "{0} - {1}")
+        /// <param name="datePattern">Custom date and time format. Defaults to <see cref="DateFormat"/>.</param>
+        /// <param name="rangeSeparator">Custom range separator. Defaults to <c>" - "</c>.</param>
+        /// <param name="culture">Culture to use. If <c>null</c> uses <see cref="CultureInfo.CurrentCulture"/>. Defaults to <c>null</c>.</param>
+        /// <returns>Formatted date range or empty string if both dates are <c>null</c>.</returns>
+        public static string FormatDateRange(DateTime? from, DateTime? to, string datePattern = DateFormat, string rangeSeparator = " - ", CultureInfo culture = null)
         {
             if (!from.HasValue && !to.HasValue)
             {
                 return string.Empty;
             }
 
-            return string.Format(pattern, FormatDate(from), FormatDate(to));
-        }
-
-        /// <summary>
-        /// Formats date range.
-        /// </summary>
-        /// <param name="from">Date from.</param>
-        /// <param name="to">Date to.</param>
-        /// <param name="pattern">Formatting pattern.</param>
-        /// <returns></returns>
-        public static string FormatDateRange(DateTime from, DateTime to, string pattern = "{0} - {1}")
-        {
-            return string.Format(pattern, FormatDate(from), FormatDate(to));
+            return StringUtils.JoinNotEmpty(rangeSeparator, FormatDateTime(from, datePattern, culture), FormatDateTime(to, datePattern, culture));
         }
     }
 }

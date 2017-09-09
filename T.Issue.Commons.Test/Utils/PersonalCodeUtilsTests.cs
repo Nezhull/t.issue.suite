@@ -20,7 +20,7 @@ namespace T.Issue.Commons.Test.Utils
             DateTime expected = new DateTime(1988, 4, 16, 0, 0, 0);
             DateTime? result = PersonalCodeUtils.GetDateOfBirth("38804161728");
 
-            Assert.True(expected.Equals(result));
+            Assert.Equal(expected, result);
         }
     }
 }

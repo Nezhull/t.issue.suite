@@ -33,14 +33,13 @@ public void Method(string param1, int param2, IList<long> param3)
 ```
 
 ### DateTime Utils
-Utility methods to format and parse `DateTime` from/to string using `hh:mm`, `yyyy-MM-dd` and `yyyy-MM-dd HH:mm:ss` formats.
+Utility methods to format and parse `DateTime` from/to string.
 
 #### Utility methods:
-* `FormatDate(DateTime/DateTime?)` - formats `DateTime` or `DateTime?` using `yyyy-MM-dd` format;
-* `FormatDateTime(DateTime/DateTime?)` - formats `DateTime` or `DateTime?` using `yyyy-MM-dd HH:mm:ss` format;
-* `FormatTimeSpan(TimeSpan/TimeSpan?)` - formats `TimeSpan` or `TimeSpan?` using `hh:mm` format;
-* `ParseDateTime(string)` - parses `DateTime?` from string using `yyyy-MM-dd HH:mm:ss` format and `CultureInfo.InvariantCulture` _(returns `null` on error)_;
-* `ParseDateTime(string, string)` - parses `DateTime?` from string using custom format and `CultureInfo.InvariantCulture` _(returns `null` on error)_;
+* `FormatDateTime(DateTime/DateTime?, string, CultureInfo)` - formats `DateTime` or `DateTime?` using provided or default `yyyy-MM-dd HH:mm:ss` format;
+* `FormatTimeSpan(TimeSpan/TimeSpan?, string, CultureInfo)` - formats `TimeSpan` or `TimeSpan?` using provided or default `hh:mm` format;
+* `ParseDateTime(string, string, CultureInfo, DateTimeStyles)` - parses `DateTime?` from string using provided or default `yyyy-MM-dd HH:mm:ss` format _(returns `null` on error)_;
+* `FormatDateRange(DateTime?, DateTime?, string, string, CultureInfo)` - formats date range using provided or default `yyyy-MM-dd` format and separator;
 
 #### Examples
 ```csharp

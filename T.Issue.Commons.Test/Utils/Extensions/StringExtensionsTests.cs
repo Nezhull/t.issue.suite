@@ -15,7 +15,7 @@ namespace T.Issue.Commons.Test.Utils.Extensions
             string s = null;
             string expected = null;
 
-            var actual = s.SafeSubstring(7);
+            var actual = s.SafeSubstring(0, 7);
 
             Assert.Equal(expected, actual);
         }
@@ -25,7 +25,7 @@ namespace T.Issue.Commons.Test.Utils.Extensions
         {
             const string expected = S12;
 
-            var actual = S12.SafeSubstring(21);
+            var actual = S12.SafeSubstring(0, 21);
 
             Assert.Equal(expected, actual);
         }
@@ -35,7 +35,7 @@ namespace T.Issue.Commons.Test.Utils.Extensions
         {
             const string expected = S12Substring06;
 
-            var actual = S12.SafeSubstring(6);
+            var actual = S12.SafeSubstring(0, 6);
 
             Assert.Equal(expected, actual);
         }

@@ -3,8 +3,18 @@ using System.Security.Cryptography;
 
 namespace T.Issue.Commons.Utils
 {
+    /// <summary>
+    ///
+    /// </summary>
     public static class EncryptionUtils
     {
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="key"></param>
+        /// <param name="vector"></param>
+        /// <returns></returns>
         public static byte[] EncryptAES(byte[] buffer, byte[] key, byte[] vector)
         {
             Assert.IsNotEmpty(buffer);
@@ -39,6 +49,13 @@ namespace T.Issue.Commons.Utils
             return encrypted;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="key"></param>
+        /// <param name="vector"></param>
+        /// <returns></returns>
         public static byte[] DecryptAES(byte[] buffer, byte[] key, byte[] vector)
         {
             byte[] decrypted;
@@ -69,6 +86,10 @@ namespace T.Issue.Commons.Utils
             return decrypted;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
         public static byte[] GenerateVectorAES()
         {
             using (Aes aes = Aes.Create())
@@ -79,6 +100,11 @@ namespace T.Issue.Commons.Utils
             }
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
         public static byte[] GenerateEntropy(long length)
         {
             byte[] entropy = new byte[length];
